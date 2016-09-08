@@ -201,7 +201,7 @@
 			//get values length
 			var values_len = values.length;
 			
-			//if autocomplete and the limit is enabled loop through
+			//if autocomplete and the limit is enabled, loop through the values
 			if(values_len && this.options.autoCompleteSourceLimit && this.options.autoCompleteSource){
 				for (var i = 0; i < values_len; i++) {
 					//if not in the autocomplete array
