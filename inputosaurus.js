@@ -9,6 +9,9 @@
  * when setting the autoCompleteSource add the code below:
  * autoCompleteSourceLimit : true,
  * 
+ * to set a limit on the results for the auto complete add this code:
+ * autoCompleteResultLimit : 5,
+ * 
  * @requires:
  *
  * 	jQuery 1.7+
@@ -57,6 +60,9 @@
 			
 			//option to only accept text from the auto complete source
 			autoCompleteSourceLimit: false,
+			
+			//option to set the max results to be displayed for the auto complete
+			autoCompleteResultLimit: false,
 
 			// When forcing users to select from the autocomplete list, allow them to press 'Enter' to select an item if it's the only option left.
 			activateFinalResult : false,
@@ -126,7 +132,13 @@
 					position : {
 						of : this.elements.ul
 					},
-					source : this.options.autoCompleteSource,
+					source : function(request, response) {
+						if(widget.options.autoCompleteResultLimit) {
+							response($.ui.autocomplete.filter(widget.options.autoCompleteSource, request.term).slice(0, widget.options.autoCompleteResultLimit));
+						} else {
+							response(widget.options.autoCompleteSource); 
+						}
+					},
 					minLength : 1,
 					select : function(ev, ui){
 						ev.preventDefault();
