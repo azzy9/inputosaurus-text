@@ -4,6 +4,11 @@
  * Must be instantiated on an <input> element
  * Allows multiple input items. Each item is represented with a removable tag that appears to be inside the input area.
  *
+ * modified to add option to force the user to use the autocomplete source
+ * 
+ * when setting the autoCompleteSource add the code below:
+ * autoCompleteSourceLimit : true,
+ * 
  * @requires:
  *
  * 	jQuery 1.7+
@@ -49,6 +54,9 @@
 
 			// simply passing an autoComplete source (array, string or function) will instantiate autocomplete functionality
 			autoCompleteSource : '',
+			
+			//option to only accept text from the auto complete source
+			autoCompleteSourceLimit: false,
 
 			// When forcing users to select from the autocomplete list, allow them to press 'Enter' to select an item if it's the only option left.
 			activateFinalResult : false,
@@ -188,6 +196,21 @@
 			// prevent autoComplete menu click from causing a false 'blur'
 			} else if(ev.type === 'blur' && !$('#ui-active-menuitem').size()){
 				values.push(val);
+			}
+			
+			//get values length
+			var values_len = values.length;
+			
+			//if autocomplete and the limit is enabled loop through
+			if(values_len && this.options.autoCompleteSourceLimit && this.options.autoCompleteSource){
+				for (var i = 0; i < values_len; i++) {
+					//if not in the autocomplete array
+					if($.inArray(values[i], this.options.autoCompleteSource) == -1) {
+						//remove the values
+						values.splice(i, 1);
+						widget.elements.input.val('');
+					}
+				}
 			}
 
 			$.isFunction(widget.options.parseHook) && (values = widget.options.parseHook(values));
